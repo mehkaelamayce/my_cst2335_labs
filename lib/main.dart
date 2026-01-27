@@ -114,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text('You have pushed the button this many times:',
                 style: TextStyle(fontSize: myFontSize)),
+                Image.asset("images/algonquin.jpg", width: 200, height: 200),
             Text(
               '$_counter',
               style: TextStyle(fontSize: myFontSize),
