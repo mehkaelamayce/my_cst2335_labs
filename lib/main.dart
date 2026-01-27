@@ -114,7 +114,14 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text('You have pushed the button this many times:',
                 style: TextStyle(fontSize: myFontSize)),
-                Image.asset("images/algonquin.jpg", width: 200, height: 200),
+
+            Image.asset("images/algonquin.jpg", width: 300.0, height: 300.0),
+              
+            ElevatedButton(onPressed: ( ) { setState(() {
+
+            }); myFontSize=20.0; },
+                child:Image.asset("images/algonquin.jpg", width: 100.0, height: 100.0)),
+
             Text(
               '$_counter',
               style: TextStyle(fontSize: myFontSize),
@@ -130,4 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  void buttonPressed() {
+  }
+
 }
