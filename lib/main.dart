@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(onPressed: ( ) { setState(() {
 
             }); myFontSize=20.0; },
-                child:Image.asset("images/algonquin.jpg", width: 100.0, height: 100.0)),
+                child:Image.asset("images/algonquin.jpg", width: 60.0, height: 60.0)),
 
             Text(
               '$_counter',
@@ -147,7 +147,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   }
                 } ),
-            
+
+            Switch(value:isChecked,
+              onChanged: ( newChecked){
+                  setState(() {
+                    isChecked = newChecked;
+                  });
+
+              },),
+
             Slider(value: myFontSize, onChanged: setNewValue, min: 0.0, max: 100.0,)
           ],
         ),
