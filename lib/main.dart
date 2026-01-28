@@ -70,6 +70,17 @@ String imageSource = "images/question-mark.png";
                   )
                   )
                   ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+                child: TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                      labelText: "Password",
+                      border: OutlineInputBorder()
+                  ),
+                )
+            )
           ],
         ),
       ),
