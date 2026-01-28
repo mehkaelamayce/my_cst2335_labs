@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lab 2',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const MyHomePage(title: 'Lab 2'),
     );
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
@@ -102,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 20),
 
             Semantics(
+              label: "Login result image",
               child: Image.asset(
                 imageSource,
                 height: 300,
