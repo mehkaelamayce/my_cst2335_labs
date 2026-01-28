@@ -99,15 +99,36 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
       ),
       body: Center(
-
         child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget> [
+            Spacer(flex: 1),
+              Text("One pan skillet Cookie", style: TextStyle(fontSize: 30.0, color: Colors.orange),),
+              Text("Ingredient List"),
+              SizedBox(width: 10, height: 20),
+                Row(
+                  children: [
+                    Icon(Icons.star),
+                    SizedBox(width:20, height: 20),
+                    Text("1 stick [8 TBSP] Unsalted butter", style: TextStyle(color: Colors.pink),),
+                  ],
+                ),
+            Row(
+              children: [
+                Icon(Icons.circle),
+                SizedBox(width:20, height: 20),
+                Text("1/2 cup sugar", style: TextStyle(color: Colors.blue),),
+              ],
+            ),
+            Spacer(flex:5),
+            /*
+            Image.asset("images/algonquin.jpg"),
             ElevatedButton(onPressed: () {}, child: Text("Button 1")),
             ElevatedButton(onPressed: () {}, child: Text("Button 2")),
             OutlinedButton(onPressed: () {}, child: Text("Button 3")),
             FilledButton(onPressed: () {}, child: Text("Button 4")),
+
+             */
             ],
         ),
       ),
