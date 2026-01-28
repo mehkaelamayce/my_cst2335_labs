@@ -13,10 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lab 2',
       theme: ThemeData(
-
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Lab 2'),
     );
   }
 }
@@ -34,6 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController passwordController;
 
 String imageSource = "images/question-mark.png";
+
 
   @override
   void initState() {
@@ -67,9 +67,9 @@ String imageSource = "images/question-mark.png";
                     decoration: const InputDecoration(
                         labelText: "Login",
                         border: OutlineInputBorder()
-                  )
-                  )
-                  ),
+                 ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(16),
                 child: TextField(
@@ -79,8 +79,9 @@ String imageSource = "images/question-mark.png";
                       labelText: "Password",
                       border: OutlineInputBorder()
                   ),
-                )
-            )
+                ),
+            ),
+
           ],
         ),
       ),
