@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController loginController;
   late TextEditingController passwordController;
 
-String imageSource = "images/question-mark.png";
+  var imageSource = "images/question-mark.png";
 
 
   @override
@@ -49,6 +49,17 @@ String imageSource = "images/question-mark.png";
     super.dispose();
   }
 
+  void onLoginPressed() {
+    String typedPassword = passwordController.text;
+
+    setState(() {
+      if (typedPassword == "ASDF") {
+        imageSource = "images/idea.png";
+      } else {
+        imageSource = "images/stop.png";
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,33 +73,42 @@ String imageSource = "images/question-mark.png";
           mainAxisAlignment: .center,
           children: [
             Padding(
-                padding: const EdgeInsets.all(16),
-                  child: TextField(
-                    controller: loginController,
-                    decoration: const InputDecoration(
-                        labelText: "Login",
-                        border: OutlineInputBorder()
-                 ),
+              padding: const EdgeInsets.all(16),
+              child: TextField(
+                controller: loginController,
+                decoration: const InputDecoration(
+                    labelText: "Login",
+                    border: OutlineInputBorder()
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-                child: TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                      labelText: "Password",
-                      border: OutlineInputBorder()
-                  ),
+              child: TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                    labelText: "Password",
+                    border: OutlineInputBorder()
                 ),
+              ),
             ),
 
             ElevatedButton(
-                onPressed: onLoginPressed,
-                child: const Text("Login"),
+              onPressed: onLoginPressed,
+              child: const Text("Login"),
             ),
 
+            const SizedBox(height: 20),
 
+            Semantics(
+              child: Image.asset(
+                imageSource,
+                height: 300,
+                width: 300,
+                fit: BoxFit.contain,
+              ),
+            )
           ],
         ),
       ),
