@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
 
@@ -34,7 +35,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var myFontSize = 30.0;
-  var _counter = 30.0;
   var isChecked = false;
   late TextEditingController controller;
 
@@ -57,14 +57,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     setState(() {
 
-      _counter++;
     });
   }
-  
+
   void setNewValue(double newValue) {
     setState(() {
       myFontSize = newValue;
-      _counter = newValue;
     });
   }
 
@@ -72,21 +70,43 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      bottomNavigationBar:
+        BottomNavigationBar(items: [
+            BottomNavigationBarItem(icon: Icon(Icons.camera), label: 'Camera' ),
+            BottomNavigationBarItem(icon: Icon(Icons.add_call), label: 'Phone'),
+        ],
+        onTap: (index) {
+          switch(index){
+            case 0:
+              break; //you click camera
+            case 1:
+              break; //you click phone
+          }
+        },
+        ),
+      drawer: Drawer(child:
+        Column(children: [
+          ElevatedButton(onPressed: () {}, child: Text("Button 1")),
+          ElevatedButton(onPressed: () {}, child: Text("Button 2")),
+      ],),
+      ),
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
+        title: Text("ABCDE"),
+      actions: [
+        ElevatedButton(onPressed: () {}, child: Image.asset("images/algonquin.jpg")),
+        ElevatedButton(onPressed: () {}, child: Text("Action 2")),
+      ],
       ),
       body: Center(
 
         child: Column(
 
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
             ElevatedButton(onPressed: () {}, child: Text("Button 1")),
             ElevatedButton(onPressed: () {}, child: Text("Button 2")),
-            ElevatedButton(onPressed: () {}, child: Text("Button 3")),
+            OutlinedButton(onPressed: () {}, child: Text("Button 3")),
             FilledButton(onPressed: () {}, child: Text("Button 4")),
             ],
         ),
@@ -98,6 +118,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
-
 }
