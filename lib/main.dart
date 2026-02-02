@@ -7,46 +7,21 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Lab 3',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Lab 3'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -54,151 +29,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var myFontSize = 30.0;
-  var _counter = 30.0;
-  var isChecked = false;
-  late TextEditingController controller;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-
-    controller.dispose();
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-  
-  void setNewValue(double newValue) {
-    setState(() {
-      myFontSize = newValue;
-      _counter = newValue;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    const double gap = 14;
+    const double radius = 55;
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            Padding(
-                padding: EdgeInsetsGeometry.fromLTRB(0, 20, 0, 20),
-            child:
-              Semantics(
-                label: "a counter of the number of times that the button was pressed",
-            child: Text(controller.value.text,
-                style: TextStyle(fontSize: myFontSize),
+      body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                  const SizedBox(height: 10),
+                  const Row(
+                    children: [
+                      Expanded(
+                        child: Text('BROWSE CATEGORIES', textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 22, fontWeight: .bold))
+                      )
+                    ]
+                  ),
+              ]
             )
-            )
-            ),
-
-            Semantics(child:
-            Image.asset("images/algonquin.jpg", width: 300.0, height: 300.0),
-              label:"An image of the library at Algonquin College"),
-
-            ElevatedButton(onPressed: ( ) {
-              var typed = controller.value.text;
-              setState(() {
-
-            }); myFontSize=20.0; },
-                child:Image.asset("images/algonquin.jpg", width: 60.0, height: 60.0)),
-
-            Text(
-              '$_counter',
-              style: TextStyle(fontSize: myFontSize),
-            ),
-            
-            Checkbox(value: isChecked,
-                onChanged: (newChecked) {
-                  if(newChecked != null) {
-                    controller.text = "You checked the checkbox";
-
-                    setState(() {
-                      isChecked = newChecked;
-                    });
-
-                  }
-                } ),
-
-            Switch(value:isChecked,
-              activeThumbColor: Colors.yellow,
-
-              onChanged: ( newChecked){
-                  setState(() {
-                    isChecked = newChecked;
-                  });
-
-              },),
-
-          TextField(controller: controller,
-          decoration:InputDecoration(
-            hintText: "Type in here",
-            labelText: "your text",
-            border: OutlineInputBorder(),
           )
-
-          )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
-
-  void buttonPressed() {
-  }
-
 }
