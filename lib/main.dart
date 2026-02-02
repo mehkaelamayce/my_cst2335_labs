@@ -59,6 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       )
                     ]
                   ),
+                  const SizedBox(height: 14),
+
+                  Row(
+                    children: [Expanded(
+                      child: Text("Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories.",
+                        textAlign: .center, style: const TextStyle(fontSize: 14),),
+                    )],
+                )
+
               ]
             )
           )
