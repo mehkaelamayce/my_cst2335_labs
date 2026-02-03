@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Text('BROWSE CATEGORIES', textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             Text("Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories.",
-                textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
+                textAlign: TextAlign.left, style: TextStyle(fontSize: 14)),
             _SectionHeader('BY MEAT'),
             _MeatRow(radius: radius),
             _SectionHeader('BY COURSE'),
@@ -172,22 +172,13 @@ class _BottomTextCircle extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(image),
-            radius: radius,
+          CircleAvatar(backgroundImage: AssetImage(image), radius: radius,
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
+          Positioned(bottom: 0, left: 0, right: 0,
             child: Text(
-              label,
-              textAlign: TextAlign.center,
-              maxLines: 1,
+              label, textAlign: TextAlign.center, maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal,
                 color: Colors.black,
               ),
             ),
