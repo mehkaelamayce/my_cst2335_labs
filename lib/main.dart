@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
       title: 'Lab 4',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
-        useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Lab 4'),
       debugShowCheckedModeBanner: false,
@@ -23,6 +22,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -32,12 +32,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    const double gap = 14;
-    const double radius = 55;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
@@ -49,35 +50,15 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 10),
 
               // Title
-              const Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'BROWSE CATEGORIES',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              const Text('BROWSE CATEGORIES', textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
 
               const SizedBox(height: 14),
 
-              const Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  )
-                ],
-              ),
+              // Subtitle
+              const Text(
+                  "Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories.",
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
 
               const SizedBox(height: 28),
 
@@ -87,14 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _CenterTextCircle('images/beef.jpg', 'BEEF', radius),
-                  SizedBox(width: 12),
-                  _CenterTextCircle('images/chicken.jpg', 'CHICKEN', radius),
-                  SizedBox(width: 12),
-                  _CenterTextCircle('images/pork.jpg', 'PORK', radius),
-                  SizedBox(width: 12),
-                  _CenterTextCircle('images/seafood.jpg', 'SEAFOOD', radius),
+                children: const [
+                  _MeatChoices('images/beef.jpg', 'BEEF'),
+                  _MeatChoices('images/chicken.jpg', 'CHICKEN'),
+                  _MeatChoices('images/pork.jpg', 'PORK'),
+                  _MeatChoices('images/seafood.jpg', 'SEAFOOD'),
                 ],
               ),
               const SizedBox(height: 30),
@@ -105,14 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _BottomTextCircle('images/maindish.jpg', 'Main Dishes', radius),
-                  SizedBox(width: 12),
-                  _BottomTextCircle('images/salad.jpg', 'Salad Recipes', radius),
-                  SizedBox(width: 12),
-                  _BottomTextCircle('images/sidedish.jpg', 'Side Dishes', radius),
-                  SizedBox(width: 12),
-                  _BottomTextCircle('images/crockpot.jpg', 'Crockpot', radius),
+                children: const [
+                  _ImageWithLabel('images/maindish.jpg', 'Main Dishes'),
+                  _ImageWithLabel('images/salad.jpg', 'Salad Recipes'),
+                  _ImageWithLabel('images/sidedish.jpg', 'Side Dishes'),
+                  _ImageWithLabel('images/crockpot.jpg', 'Crockpot'),
                 ],
               ),
 
@@ -124,14 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _BottomTextCircle('images/icecream.jpg', 'Ice Cream', radius),
-                  SizedBox(width: 12),
-                  _BottomTextCircle('images/brownies.jpg', 'Brownies', radius),
-                  SizedBox(width: 12),
-                  _BottomTextCircle('images/pies.jpg', 'Pies', radius),
-                  SizedBox(width: 12),
-                  _BottomTextCircle('images/cookies.jpg', 'Cookies', radius),
+                children: const [
+                  _ImageWithLabel('images/icecream.jpg', 'Ice Cream'),
+                  _ImageWithLabel('images/brownies.jpg', 'Brownies'),
+                  _ImageWithLabel('images/pies.jpg', 'Pies'),
+                  _ImageWithLabel('images/cookies.jpg', 'Cookies'),
                 ],
               ),
               const SizedBox(height: 20),
@@ -143,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+
 // Widgets
 
 class _SectionHeader extends StatelessWidget {
@@ -151,47 +124,30 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [Expanded(
-          child: Text(
-            text, textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, letterSpacing: 2.5, fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
+    return Text(text, textAlign: TextAlign.center, style: const TextStyle(
+      fontSize: 18, fontWeight: FontWeight.bold,
+      ),
     );
   }
 }
 
 // BY MEAT: centered text on image
-class _CenterTextCircle extends StatelessWidget {
+class _MeatChoices extends StatelessWidget {
   final String image;
-  final String text;
-  final double radius;
+  final String label;
 
-  const _CenterTextCircle(this.image, this.text, this.radius);
+  const _MeatChoices(this.image, this.label);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
       children: [
-        CircleAvatar(
-          backgroundImage: AssetImage(image),
-          radius: radius,
-        ),
-        CircleAvatar(
-          radius: radius,
-          backgroundColor: Colors.black.withOpacity(0.25),
-        ),
-        Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-            shadows: [Shadow(blurRadius: 6, color: Colors.black45, offset: Offset(0, 2))],
+        CircleAvatar(backgroundImage: AssetImage(image), radius: 45,),
+        CircleAvatar(radius: 45, backgroundColor: Colors.black.withOpacity(0.25),),
+        Text(label,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
+            shadows: [Shadow(blurRadius: 6, color: Colors.black45,)],
           ),
         ),
       ],
@@ -199,34 +155,23 @@ class _CenterTextCircle extends StatelessWidget {
   }
 }
 
-// BY COURSE / BY DESSERT: bottom-center text on image (per your lab instructions)
-class _BottomTextCircle extends StatelessWidget {
+// BY COURSE / BY DESSERT
+class _ImageWithLabel extends StatelessWidget {
   final String image;
-  final String text;
-  final double radius;
+  final String label;
 
-  const _BottomTextCircle(this.image, this.text, this.radius);
+  const _ImageWithLabel(this.image, this.label);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(
-          backgroundImage: AssetImage(image),
-          radius: radius,
+        CircleAvatar(backgroundImage: AssetImage(image), radius: 45,),
+        const SizedBox(height: 6),
+        Text(label, textAlign: TextAlign.center, style:
+        const TextStyle(fontSize: 13, fontWeight: FontWeight.w500,
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              shadows: [Shadow(blurRadius: 6, color: Colors.black45)],
-            ),
-          ),
         ),
       ],
     );
