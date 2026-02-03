@@ -97,7 +97,43 @@ class _MyHomePageState extends State<MyHomePage> {
                   _CenterTextCircle('images/seafood.jpg', 'SEAFOOD', radius),
                 ],
               ),
+              const SizedBox(height: 30),
 
+              // BY COURSE
+              const _SectionHeader('BY COURSE'),
+              const SizedBox(height: 14),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _BottomTextCircle('images/maindish.jpg', 'Main Dishes', radius),
+                  SizedBox(width: 12),
+                  _BottomTextCircle('images/salad.jpg', 'Salad Recipes', radius),
+                  SizedBox(width: 12),
+                  _BottomTextCircle('images/sidedish.jpg', 'Side Dishes', radius),
+                  SizedBox(width: 12),
+                  _BottomTextCircle('images/crockpot.jpg', 'Crockpot', radius),
+                ],
+              ),
+
+              const SizedBox(height: 30),
+
+              // BY DESSERT
+              const _SectionHeader('BY DESSERT'),
+              const SizedBox(height: 14),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _BottomTextCircle('images/icecream.jpg', 'Ice Cream', radius),
+                  SizedBox(width: 12),
+                  _BottomTextCircle('images/brownies.jpg', 'Brownies', radius),
+                  SizedBox(width: 12),
+                  _BottomTextCircle('images/pies.jpg', 'Pies', radius),
+                  SizedBox(width: 12),
+                  _BottomTextCircle('images/cookies.jpg', 'Cookies', radius),
+                ],
+              ),
               const SizedBox(height: 20),
             ],
           ),
@@ -141,16 +177,58 @@ class _CenterTextCircle extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        CircleAvatar(backgroundImage: AssetImage(image), radius: radius,),
-        CircleAvatar(radius: radius, backgroundColor: Colors.black.withOpacity(0.25)),
-
+        CircleAvatar(
+          backgroundImage: AssetImage(image),
+          radius: radius,
+        ),
+        CircleAvatar(
+          radius: radius,
+          backgroundColor: Colors.black.withOpacity(0.25),
+        ),
         Text(
           text,
           style: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+            shadows: [Shadow(blurRadius: 6, color: Colors.black45, offset: Offset(0, 2))],
           ),
+        ),
       ],
     );
   }
 }
 
+// BY COURSE / BY DESSERT: bottom-center text on image (per your lab instructions)
+class _BottomTextCircle extends StatelessWidget {
+  final String image;
+  final String text;
+  final double radius;
+
+  const _BottomTextCircle(this.image, this.text, this.radius);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        CircleAvatar(
+          backgroundImage: AssetImage(image),
+          radius: radius,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              shadows: [Shadow(blurRadius: 6, color: Colors.black45)],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
