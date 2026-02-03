@@ -1,4 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 
 import 'package:flutter/material.dart';
 
@@ -59,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _SectionHeader('BY COURSE'),
             _CourseRow(radius: radius),
             _SectionHeader('BY DESSERT'),
-            _CourseRow(radius: radius),
+            _DessertRow(radius: radius),
           ],
         ),
       ),
@@ -90,7 +89,7 @@ class _MeatRow extends StatelessWidget {
           _CenterTextCircle('images/beef.jpg', 'BEEF', radius),
           _CenterTextCircle('images/chicken.jpg', 'CHICKEN', radius),
           _CenterTextCircle('images/pork.jpg', 'PORK', radius),
-          _CenterTextCircle('images/seafood.jpg', 'seafood', radius),
+          _CenterTextCircle('images/seafood.jpg', 'SEAFOOD', radius),
         ],
     );
   }
@@ -107,10 +106,73 @@ class _CourseRow extends StatelessWidget {
       children: [
         _BottomTextCircle('images/maindish.jpg', 'Main Dishes', radius),
         _BottomTextCircle('images/salad.jpg', 'Salad Recipes', radius),
-        _BottomTextCircle('images/side.jpg', 'Side Dishes', radius),
+        _BottomTextCircle('images/sidedish.jpg', 'Side Dishes', radius),
         _BottomTextCircle('images/crockpot.jpg', 'Crockpot', radius),
       ],
     );
   }
 }
+
+class _DessertRow extends StatelessWidget {
+  final double radius;
+  const _DessertRow({required this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _BottomTextCircle('images/icecream.jpg', 'Ice Cream', radius),
+        _BottomTextCircle('images/brownies.jpg', 'Brownies', radius),
+        _BottomTextCircle('images/pies.jpg', 'Pies', radius),
+        _BottomTextCircle('images/cookies.jpg', 'Cookies', radius),
+      ],
+    );
+  }
+}
+
+class _CenterTextCircle extends StatelessWidget {
+  final String image;
+  final String label;
+  final double radius;
+
+  const _CenterTextCircle(this.image, this.label, this.radius);
+
+  @override
+  Widget build(BuildContext context) {
+   return Stack(
+     alignment: Alignment.center,
+     children: [
+       CircleAvatar(backgroundImage: AssetImage(image), radius: radius),
+       CircleAvatar(radius: radius, backgroundColor: Colors.black.withOpacity(0.25)),
+       Text(
+         label, style: const TextStyle(
+            color: Colors.white, fontWeight: .bold)
+       ),
+     ],
+   );
+  }
+}
+
+class _BottomTextCircle extends StatelessWidget {
+  final String image;
+  final String label;
+  final double radius;
+
+  const _BottomTextCircle(this.image, this.label, this.radius);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        CircleAvatar(backgroundImage: AssetImage(image), radius: radius),
+        Padding(padding: const EdgeInsets.only(bottom: 8),
+        child: Text(
+            label, textAlign: TextAlign.center, style: const TextStyle(
+                color: Colors.black, fontWeight: .bold, fontSize: 12),
+        ),)
+      ],
+    );
+  }
 }
