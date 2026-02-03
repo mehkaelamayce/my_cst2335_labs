@@ -70,4 +70,47 @@ class _MyHomePageState extends State<MyHomePage> {
 class _SectionHeader extends StatelessWidget {
   final String text;
   const _SectionHeader(this.text);
+
+  @override
+    Widget build(BuildContext context) {
+    return Text(text, textAlign: TextAlign.center,
+    style: const TextStyle(fontSize: 18, fontWeight: .bold));
+  }
+}
+
+class _MeatRow extends StatelessWidget {
+  final double radius;
+  const _MeatRow({required this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _CenterTextCircle('images/beef.jpg', 'BEEF', radius),
+          _CenterTextCircle('images/chicken.jpg', 'CHICKEN', radius),
+          _CenterTextCircle('images/pork.jpg', 'PORK', radius),
+          _CenterTextCircle('images/seafood.jpg', 'seafood', radius),
+        ],
+    );
+  }
+}
+
+class _CourseRow extends StatelessWidget {
+  final double radius;
+  const _CourseRow({required this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _BottomTextCircle('images/maindish.jpg', 'Main Dishes', radius),
+        _BottomTextCircle('images/salad.jpg', 'Salad Recipes', radius),
+        _BottomTextCircle('images/side.jpg', 'Side Dishes', radius),
+        _BottomTextCircle('images/crockpot.jpg', 'Crockpot', radius),
+      ],
+    );
+  }
+}
 }
