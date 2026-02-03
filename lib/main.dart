@@ -44,14 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        child: SizedBox.expand(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: const [
             Text('BROWSE CATEGORIES', textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            Text(
-                "Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories.",
+            Text("Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories.",
                 textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
             _SectionHeader('BY MEAT'),
             _MeatRow(radius: radius),
@@ -61,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _DessertRow(radius: radius),
           ],
         ),
+      ),
       ),
     );
   }
@@ -73,7 +74,7 @@ class _SectionHeader extends StatelessWidget {
   @override
     Widget build(BuildContext context) {
     return Text(text, textAlign: TextAlign.center,
-    style: const TextStyle(fontSize: 18, fontWeight: .bold));
+    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
   }
 }
 
@@ -147,7 +148,7 @@ class _CenterTextCircle extends StatelessWidget {
        CircleAvatar(radius: radius, backgroundColor: Colors.black.withOpacity(0.25)),
        Text(
          label, style: const TextStyle(
-            color: Colors.white, fontWeight: .bold)
+            color: Colors.white, fontWeight: FontWeight.bold)
        ),
      ],
    );
@@ -163,19 +164,34 @@ class _BottomTextCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double diameter = radius * 2;
+    const double labelSpace = 28;
     return SizedBox(
-      width: radius * 2, height: radius * 2,
+      width: diameter,
+      height: diameter + labelSpace,
       child: Stack(
+        alignment: Alignment.topCenter,
         children: [
-          CircleAvatar(backgroundImage: AssetImage(image), radius: radius),
-
+          CircleAvatar(
+            backgroundImage: AssetImage(image),
+            radius: radius,
+          ),
           Positioned(
-              left: 0, right: 0, bottom: 20,
-              child: Text(label, textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black, fontWeight: .bold, fontSize: 12,
-                ),
-              ),)
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+          ),
         ],
       ),
     );
