@@ -163,16 +163,21 @@ class _BottomTextCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        CircleAvatar(backgroundImage: AssetImage(image), radius: radius),
-        Padding(padding: const EdgeInsets.only(bottom: 8),
-        child: Text(
-            label, textAlign: TextAlign.center, style: const TextStyle(
-                color: Colors.black, fontWeight: .bold, fontSize: 12),
-        ),)
-      ],
+    return SizedBox(
+      width: radius * 2, height: radius * 2,
+      child: Stack(
+        children: [
+          CircleAvatar(backgroundImage: AssetImage(image), radius: radius),
+
+          Positioned(
+              left: 0, right: 0, bottom: 20,
+              child: Text(label, textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black, fontWeight: .bold, fontSize: 12,
+                ),
+              ),)
+        ],
+      ),
     );
   }
 }
