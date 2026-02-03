@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lab 3',
+      title: 'Lab 4',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
         useMaterial3: true,
@@ -86,19 +86,17 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 14),
 
               Row(
-                children: const [
-                  Expanded(child: _CenterTextCircle('images/beef.jpg', 'BEEF', radius)),
-                  SizedBox(width: gap),
-                  Expanded(child: _CenterTextCircle('images/chicken.jpg', 'CHICKEN', radius)),
-                  SizedBox(width: gap),
-                  Expanded(child: _CenterTextCircle('images/pork.jpg', 'PORK', radius)),
-                  SizedBox(width: gap),
-                  Expanded(child: _CenterTextCircle('images/seafood.jpg', 'SEAFOOD', radius)),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _CenterTextCircle('images/beef.jpg', 'BEEF', radius),
+                  SizedBox(width: 12),
+                  _CenterTextCircle('images/chicken.jpg', 'CHICKEN', radius),
+                  SizedBox(width: 12),
+                  _CenterTextCircle('images/pork.jpg', 'PORK', radius),
+                  SizedBox(width: 12),
+                  _CenterTextCircle('images/seafood.jpg', 'SEAFOOD', radius),
                 ],
               ),
-
-
-
 
               const SizedBox(height: 20),
             ],
@@ -143,23 +141,14 @@ class _CenterTextCircle extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        CircleAvatar(
-          backgroundImage: AssetImage(image),
-          radius: radius,
-        ),
-        CircleAvatar(
-          radius: radius,
-          backgroundColor: Colors.black.withOpacity(0.25)),
+        CircleAvatar(backgroundImage: AssetImage(image), radius: radius,),
+        CircleAvatar(radius: radius, backgroundColor: Colors.black.withOpacity(0.25)),
 
         Text(
           text,
           style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-            shadows: [Shadow(blurRadius: 6, color: Colors.black45, offset: Offset(0, 2))],
+            color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.5),
           ),
-        ),
       ],
     );
   }
