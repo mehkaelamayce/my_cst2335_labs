@@ -81,6 +81,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> saveCredentials() async {
+    await prefs.setString(usernameKey, loginController.text);
+    await prefs.setString(passwordKey, passwordController.text);
+  }
+
+  Future<void> clearCredentials() async {
+    await prefs.remove(usernameKey);
+    await prefs.remove(passwordKey);
+  }
 
   Future<void> onLoginPressed() async {
     final typedPassword = passwordController.text;
