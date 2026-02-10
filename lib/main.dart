@@ -58,8 +58,33 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  Future<void> loadSavedCredentials() async {
+    try {
+      final username = await prefs.getString(usernameKey);
+      final password = await prefs.getString(passwordKey);
+
+      if (username.isNotEmpty && password.isNotEmpty) {
+        loginController.text = username;
+        passwordController.text = password;
+
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Previous login name and password loaded."),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        });
+      }
+    } catch (_) {
+    }
+  }
+
 
   Future<void> onLoginPressed() async {
+    final typedPassword = passwordController.text;
+
     final bool? shouldSave = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -84,15 +109,13 @@ class _MyHomePageState extends State<MyHomePage> {
     if (shouldSave == true) {
       await saveCredentials();
     } else {
-      await clearCredentials();
-      loginController.clear();
-      passwordController.clear();
+      await clearCredentials(); // next app start will be empty
     }
 
-
-    final typedPassword = passwordController.text;
     setState(() {
-      imageSource = (typedPassword == "ASDF") ? "images/idea.png" : "images/stop.png";
+      imageSource = (typedPassword == "ASDF")
+          ? "images/idea.png"
+          : "images/stop.png";
     });
   }
 
