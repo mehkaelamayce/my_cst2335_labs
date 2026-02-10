@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -11,11 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lab 2',
+      title: 'Lab 4',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Lab 2'),
+      home: const MyHomePage(title: 'Lab 4'),
     );
   }
 }
@@ -32,6 +34,11 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController loginController;
   late TextEditingController passwordController;
 
+  final EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
+
+  static const String usernameKey = "saved_username";
+  static const String passwordKey = "saved_password";
+
   var imageSource = "images/question-mark.png";
 
 
@@ -40,6 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     loginController = TextEditingController();
     passwordController = TextEditingController();
+
+    loadSavedCredentials();
   }
 
   @override
@@ -49,17 +58,44 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void onLoginPressed() {
-    String typedPassword = passwordController.text;
 
+  Future<void> onLoginPressed() async {
+    final bool? shouldSave = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text("Save login?"),
+        content: const Text(
+          "Do you want to save your username and password for next time?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("No"),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Yes"),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldSave == true) {
+      await saveCredentials();
+    } else {
+      await clearCredentials();
+      loginController.clear();
+      passwordController.clear();
+    }
+
+
+    final typedPassword = passwordController.text;
     setState(() {
-      if (typedPassword == "ASDF") {
-        imageSource = "images/idea.png";
-      } else {
-        imageSource = "images/stop.png";
-      }
+      imageSource = (typedPassword == "ASDF") ? "images/idea.png" : "images/stop.png";
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
