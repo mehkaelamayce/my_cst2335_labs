@@ -25,6 +25,27 @@ class _ProfilePageState extends State<ProfilePage> {
     lastController = TextEditingController(text: repo.lastName);
     phoneController = TextEditingController(text: repo.phoneNumber);
     emailController = TextEditingController(text: repo.emailAddress);
+
+    firstController.addListener(() {
+      repo.firstName = firstController.text;
+      repo.saveData();
+    });
+
+    lastController.addListener(() {
+      repo.lastName = lastController.text;
+      repo.saveData();
+    });
+
+    phoneController.addListener(() {
+      repo.phoneNumber = phoneController.text;
+      repo.saveData();
+    });
+
+    emailController.addListener(() {
+      repo.emailAddress = emailController.text;
+      repo.saveData();
+    });
+
   }
 
   @override
