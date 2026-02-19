@@ -61,7 +61,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
             TextField(controller: firstController, decoration: const InputDecoration(labelText: "First Name")),
             TextField(controller: lastController, decoration: const InputDecoration(labelText: "Last Name")),
-            TextField(controller: phoneController, decoration: const InputDecoration(labelText: "Phone Number")),
+
+            Row(
+              children: [
+                Flexible(
+                  child: TextField(
+                    controller: phoneController,
+                    decoration: const InputDecoration(labelText: "Phone Number"),
+                  ),
+                ),
+                ElevatedButton(onPressed: () {}, child: const Icon(Icons.call)),
+                ElevatedButton(onPressed: () {}, child: const Icon(Icons.sms)),
+              ],
+            ),
+
             TextField(controller: emailController, decoration: const InputDecoration(labelText: "Email address")),
           ],
         ),
