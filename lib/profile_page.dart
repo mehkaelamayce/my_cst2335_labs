@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -48,6 +49,26 @@ class _ProfilePageState extends State<ProfilePage> {
 
   }
 
+  Future<void> launchSafe(String url) async {
+    final uri = Uri.parse(url);
+
+    if (!await canLaunchUrl(uri)) {
+      if (!mounted) return;
+
+      showDialog(
+        context: context,
+        builder: (_) => const AlertDialog(
+          title: Text("Not Supported"),
+          content: Text("This action is not supported on this device"),
+        ),
+      );
+      return;
+    }
+
+    await launchUrl(uri);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,8 +91,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: const InputDecoration(labelText: "Phone Number"),
                   ),
                 ),
-                ElevatedButton(onPressed: () {}, child: const Icon(Icons.call)),
-                ElevatedButton(onPressed: () {}, child: const Icon(Icons.sms)),
+                ElevatedButton(
+                  onPressed: () => launchSafe("tel:${phoneController.text}"),
+                  child: const Icon(Icons.call),
+                ),
+
+                ElevatedButton(
+                  onPressed: () => launchSafe("sms:${phoneController.text}"),
+                  child: const Icon(Icons.sms),
+                ),
+
               ],
             ),
 
