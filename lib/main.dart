@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'UserRepository.dart';
-import 'ProfilePage.dart';
+import 'user_repository.dart';
+import 'profile_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -5,7 +5,7 @@ class UserRepository {
   UserRepository._internal();
 
   final EncryptedSharedPreferences _prefs = EncryptedSharedPreferences();
-  
+
   String firstName = '';
   String lastName = '';
   String phoneNumber = '';
