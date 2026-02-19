@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'UserRepository.dart';
+import 'ProfilePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -128,6 +129,20 @@ class _MyHomePageState extends State<MyHomePage> {
           ? "images/idea.png"
           : "images/stop.png";
     });
+
+    if (typedPassword == "ASDF") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Welcome Back ${loginController.text}")),
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ProfilePage(loginName: loginController.text),
+        ),
+      );
+    }
+
   }
 
 
