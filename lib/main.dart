@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'profile_page.dart';
 
 void main() {
   runApp(const MyApp());
