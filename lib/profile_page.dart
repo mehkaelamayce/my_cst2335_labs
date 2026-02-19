@@ -57,15 +57,21 @@ class _ProfilePageState extends State<ProfilePage> {
 
       showDialog(
         context: context,
-        builder: (_) => const AlertDialog(
+        builder: (_) => AlertDialog(
           title: Text("Not Supported"),
           content: Text("This action is not supported on this device"),
+            actions: [
+            TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+            ),
+          ],
         ),
       );
       return;
     }
 
-    await launchUrl(uri);
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
 
