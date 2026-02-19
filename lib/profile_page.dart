@@ -104,7 +104,20 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
 
-            TextField(controller: emailController, decoration: const InputDecoration(labelText: "Email address")),
+            Row(
+              children: [
+                Flexible(
+                  child: TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: "Email address"),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => launchSafe("mailto:${emailController.text}"),
+                  child: const Icon(Icons.mail),
+                ),
+              ],
+            ),
           ],
         ),
       ),
