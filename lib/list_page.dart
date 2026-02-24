@@ -27,5 +27,12 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     super.dispose();
   }
 
+  Widget ListPage() {
+    return Column(
+      children: [
+
+      ],
+    );
+  }
 
 }
