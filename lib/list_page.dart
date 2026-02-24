@@ -139,4 +139,14 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Flutter Demo Home Page")),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: ListPage(),
+      ),
+    );
+  }
 }
