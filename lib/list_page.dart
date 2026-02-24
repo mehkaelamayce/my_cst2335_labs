@@ -175,7 +175,11 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Flutter Demo Home Page")),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.25),
+      appBar: AppBar(
+        title: const Text("Flutter Demo Home Page"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: ListPage(),
