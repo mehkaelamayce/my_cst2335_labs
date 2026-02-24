@@ -43,6 +43,29 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     });
   }
 
+  Widget buildListView() {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+
+        return GestureDetector(
+          onLongPress: () => confirmDelete(index),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${index + 1}: ${item.name}"),
+                Text("quantity: ${item.qty}"),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget ListPage() {
     return Column(
       children: [
