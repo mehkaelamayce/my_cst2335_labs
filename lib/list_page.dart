@@ -43,6 +43,35 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     });
   }
 
+  void confirmDelete(int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Delete item?"),
+          content: const Text("Do you want to delete this item?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // No
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  items.removeAt(index);
+                });
+                Navigator.pop(context); // Yes
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget buildListView() {
     return ListView.builder(
       itemCount: items.length,
