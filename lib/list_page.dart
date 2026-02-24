@@ -98,43 +98,76 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
   Widget ListPage() {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              flex: 5,
-              child: TextField(
-                controller: itemController,
-                decoration: const InputDecoration(
-                  hintText: "Type the item here",
-                  border: OutlineInputBorder(),
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: TextField(
+                  controller: itemController,
+                  decoration: const InputDecoration(
+                    hintText: "Type the item here",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              flex: 5,
-              child: TextField(
-                controller: qtyController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: "Type the quantity here",
-                  border: OutlineInputBorder(),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 6,
+                child: TextField(
+                  controller: qtyController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: "Type the quantity here",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: addItem,
-              child: const Text("Click here"),
-            ),
-          ],
+              const SizedBox(width: 12),
+              SizedBox(
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: addItem,
+                  child: const Text("Click here"),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
+
+        const SizedBox(height: 20),
+
         Expanded(
           child: items.isEmpty
-              ? const Center(child: Text("There are no items in the list"))
-              : buildListView(),
-        ),
+              ? const Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Center(child: Text("There are no items in the list")),
+          )
+              : Align(
+            alignment: Alignment.topCenter, // <--- pushes list to top
+            child: SizedBox(
+              width: 320, // narrow like prof screenshot
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+
+                  return GestureDetector(
+                    onLongPress: () => confirmDelete(index),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Text(
+                        "${index + 1}: ${item.name}   quantity: ${item.qty}",
+                        textAlign: TextAlign.center, // horizontally centered text
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
