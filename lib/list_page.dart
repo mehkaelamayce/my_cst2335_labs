@@ -27,6 +27,22 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     super.dispose();
   }
 
+  void addItem() {
+    final name = itemController.text.trim();
+    final qtyText = qtyController.text.trim();
+
+    if (name.isEmpty || qtyText.isEmpty) return;
+
+    final qty = int.tryParse(qtyText);
+    if (qty == null) return;
+
+    setState(() {
+      items.add(ShoppingItem(name: name, qty: qty));
+      itemController.clear();
+      qtyController.clear();
+    });
+  }
+
   Widget ListPage() {
     return Column(
       children: [
