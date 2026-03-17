@@ -101,13 +101,14 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                 child: const Text("No"),
               ),
               TextButton(
-                onPressed: () {
-                  dao.deleteItem(items[index]);
+                onPressed: () async {
+                  await dao.deleteItem(items[index]);
+
+                  if (!mounted) return;
 
                   setState(() {
                     items.removeAt(index);
                   });
-                  Navigator.pop(context); // Yes
                 },
                 child: const Text("Yes"),
               ),
