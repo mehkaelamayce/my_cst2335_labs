@@ -83,6 +83,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
       itemController.clear();
       qtyController.clear();
     });
+  }
 
 
     void confirmDelete(int index) {
