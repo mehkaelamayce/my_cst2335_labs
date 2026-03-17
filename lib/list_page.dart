@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:floor/floor.dart';
 
+@entity
 class ShoppingItem {
+
+  @primaryKey
+  final int id;
+
   final String name;
   final int qty;
 
-  ShoppingItem({required this.name, required this.qty});
+  static int ID = 1;
+
+  ShoppingItem(this.id, this.name, this.qty) {
+    if (id >= ID) {
+      ID = id + 1;
+    }
+  }
 }
 
   class ShoppingListPage extends StatefulWidget {
@@ -36,154 +48,166 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     final qty = int.tryParse(qtyText);
     if (qty == null) return;
 
+    final item = ShoppingItem(ShoppingItem.ID++, name, qty);
+
+    dao.insertItem(item);
+
     setState(() {
-      items.add(ShoppingItem(name: name, qty: qty));
-      itemController.clear();
-      qtyController.clear();
+      items.add(item);
     });
-  }
 
-  void confirmDelete(int index) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Delete item?"),
-          content: const Text("Do you want to delete this item?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // No
-              },
-              child: const Text("No"),
+
+    void confirmDelete(int index) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Delete item?"),
+            content: const Text("Do you want to delete this item?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // No
+                },
+                child: const Text("No"),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    items.removeAt(index);
+                  });
+                  Navigator.pop(context); // Yes
+                },
+                child: const Text("Yes"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    Widget buildListView() {
+      return ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+
+          return GestureDetector(
+            onLongPress: () => confirmDelete(index),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 6.0, horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${index + 1}: ${item.name}"),
+                  Text("quantity: ${item.qty}"),
+                ],
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  items.removeAt(index);
-                });
-                Navigator.pop(context); // Yes
-              },
-              child: const Text("Yes"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+          );
+        },
+      );
+    }
 
-  Widget buildListView() {
-    return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-
-        return GestureDetector(
-          onLongPress: () => confirmDelete(index),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+    Widget listPage() {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${index + 1}: ${item.name}"),
-                Text("quantity: ${item.qty}"),
+                Expanded(
+                  flex: 6,
+                  child: TextField(
+                    controller: itemController,
+                    decoration: const InputDecoration(
+                      hintText: "Type the item here",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 6,
+                  child: TextField(
+                    controller: qtyController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: "Type the quantity here",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: addItem,
+                    child: const Text("Add"),
+                  ),
+                ),
               ],
             ),
           ),
-        );
-      },
-    );
-  }
 
-  Widget ListPage() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 6,
-                child: TextField(
-                  controller: itemController,
-                  decoration: const InputDecoration(
-                    hintText: "Type the item here",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 6,
-                child: TextField(
-                  controller: qtyController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: "Type the quantity here",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              SizedBox(
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: addItem,
-                  child: const Text("Add"),
-                ),
-              ),
-            ],
-          ),
-        ),
+          const SizedBox(height: 20),
 
-        const SizedBox(height: 20),
+          Expanded(
+            child: items.isEmpty
+                ? const Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Center(child: Text("There are no items in the list")),
+            )
+                : Align(
+              alignment: Alignment.topCenter, // <--- pushes list to top
+              child: SizedBox(
+                width: 320, // narrow like prof screenshot
+                child: ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
 
-        Expanded(
-          child: items.isEmpty
-              ? const Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Center(child: Text("There are no items in the list")),
-          )
-              : Align(
-            alignment: Alignment.topCenter, // <--- pushes list to top
-            child: SizedBox(
-              width: 320, // narrow like prof screenshot
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-
-                  return GestureDetector(
-                    onLongPress: () => confirmDelete(index),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Text(
-                        "${index + 1}: ${item.name}   quantity: ${item.qty}",
-                        textAlign: TextAlign.center, // horizontally centered text
+                    return GestureDetector(
+                      onLongPress: () => confirmDelete(index),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text(
+                          "${index + 1}: ${item.name}   quantity: ${item.qty}",
+                          textAlign: TextAlign
+                              .center, // horizontally centered text
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        )
-      ],
-    );
-  }
+          )
+        ],
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.25),
-      appBar: AppBar(
-        title: const Text("Shopping List"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: ListPage(),
-      ),
-    );
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary
+            .withOpacity(0.25),
+        appBar: AppBar(
+          title: const Text("Shopping List"),
+          backgroundColor: Theme
+              .of(context)
+              .colorScheme
+              .inversePrimary,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: listPage(),
+        ),
+      );
+    }
   }
 }
