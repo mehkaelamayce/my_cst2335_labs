@@ -66,13 +66,20 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
   }
 
   Future<void> addItem() async {
+    if (!isDatabaseReady) return;
+
     final name = itemController.text.trim();
     final qtyText = qtyController.text.trim();
 
     if (name.isEmpty || qtyText.isEmpty) return;
 
     final qty = int.tryParse(qtyText);
-    if (qty == null) return;
+    if (qty == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid quantity")),
+      );
+      return;
+    }
 
     final item = ShoppingItem(ShoppingItem.idCounter++, name, qty);
 
@@ -96,18 +103,21 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // No
+                  Navigator.pop(context);
                 },
                 child: const Text("No"),
               ),
               TextButton(
                 onPressed: () async {
-                  await dao.deleteItem(items[index]);
+                  final item = items[index];
+                  Navigator.pop(context);
+
+                  await dao.deleteItem(item);
 
                   if (!mounted) return;
 
                   setState(() {
-                    items.removeAt(index);
+                    items.remove(item);
                   });
                 },
                 child: const Text("Yes"),
@@ -167,9 +177,9 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
               child: Center(child: Text("There are no items in the list")),
             )
                 : Align(
-              alignment: Alignment.topCenter, // <--- pushes list to top
+              alignment: Alignment.topCenter,
               child: SizedBox(
-                width: 320, // narrow like prof screenshot
+                width: 320,
                 child: ListView.builder(
                   itemCount: items.length,
                   itemBuilder: (context, index) {
@@ -182,7 +192,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                         child: Text(
                           "${index + 1}: ${item.name}   quantity: ${item.qty}",
                           textAlign: TextAlign
-                              .center, // horizontally centered text
+                              .center,
                         ),
                       ),
                     );
@@ -198,11 +208,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary
-            .withOpacity(0.25),
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("Shopping List"),
           backgroundColor: Theme
@@ -212,7 +218,9 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: listPage(),
+          child: isDatabaseReady
+            ? listPage()
+            : const Center(child: CircularProgressIndicator()),
         ),
       );
     }
