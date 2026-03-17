@@ -65,7 +65,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     super.dispose();
   }
 
-  void addItem() {
+  Future<void> addItem() async {
     final name = itemController.text.trim();
     final qtyText = qtyController.text.trim();
 
@@ -76,7 +76,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
 
     final item = ShoppingItem(ShoppingItem.idCounter++, name, qty);
 
-    dao.insertItem(item);
+    await dao.insertItem(item);
 
     setState(() {
       items.add(item);
@@ -216,4 +216,3 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
       );
     }
   }
-}
