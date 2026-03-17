@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:floor/floor.dart';
+import 'database.dart';
+import 'shopping_dao.dart';
 
 @entity
 class ShoppingItem {
@@ -10,11 +12,11 @@ class ShoppingItem {
   final String name;
   final int qty;
 
-  static int ID = 1;
+  static int idCounter = 1;
 
   ShoppingItem(this.id, this.name, this.qty) {
-    if (id >= ID) {
-      ID = id + 1;
+    if (id >= idCounter) {
+      idCounter = id + 1;
     }
   }
 }
@@ -32,6 +34,30 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
 
   final List<ShoppingItem> items = [];
 
+  late AppDatabase database;
+  late ShoppingDao dao;
+  bool isDatabaseReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadDatabase();
+  }
+
+    Future<void> loadDatabase() async {
+      database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+      dao = database.shoppingDao;
+
+      final list = await dao.findAllItems();
+
+      setState(() {
+        items.clear();
+        items.addAll(list);
+        isDatabaseReady = true;
+      });
+    }
+
+
   @override
   void dispose() {
     itemController.dispose();
@@ -48,12 +74,14 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     final qty = int.tryParse(qtyText);
     if (qty == null) return;
 
-    final item = ShoppingItem(ShoppingItem.ID++, name, qty);
+    final item = ShoppingItem(ShoppingItem.idCounter++, name, qty);
 
     dao.insertItem(item);
 
     setState(() {
       items.add(item);
+      itemController.clear();
+      qtyController.clear();
     });
 
 
@@ -73,6 +101,8 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
               ),
               TextButton(
                 onPressed: () {
+                  dao.deleteItem(items[index]);
+
                   setState(() {
                     items.removeAt(index);
                   });
@@ -81,30 +111,6 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                 child: const Text("Yes"),
               ),
             ],
-          );
-        },
-      );
-    }
-
-    Widget buildListView() {
-      return ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final item = items[index];
-
-          return GestureDetector(
-            onLongPress: () => confirmDelete(index),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 6.0, horizontal: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("${index + 1}: ${item.name}"),
-                  Text("quantity: ${item.qty}"),
-                ],
-              ),
-            ),
           );
         },
       );
@@ -152,7 +158,6 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
           ),
 
           const SizedBox(height: 20),
-
           Expanded(
             child: items.isEmpty
                 ? const Padding(

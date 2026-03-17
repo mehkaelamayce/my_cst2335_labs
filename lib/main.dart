@@ -142,9 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
             )
             ),
 
-            Semantics(child:
-            Image.asset("images/algonquin.jpg", width: 300.0, height: 300.0),
-              label:"An image of the library at Algonquin College"),
+            Semantics(label:"An image of the library at Algonquin College", child:
+            Image.asset("images/algonquin.jpg", width: 300.0, height: 300.0)),
 
             ElevatedButton(onPressed: ( ) {
               var typed = controller.value.text;
