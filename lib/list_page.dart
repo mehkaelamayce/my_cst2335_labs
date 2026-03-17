@@ -129,7 +129,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: addItem,
-                  child: const Text("Click here"),
+                  child: const Text("Add"),
                 ),
               ),
             ],
@@ -177,7 +177,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.25),
       appBar: AppBar(
-        title: const Text("Flutter Demo Home Page"),
+        title: const Text("Shopping List"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Padding(
