@@ -14,6 +14,8 @@ class ShoppingItem {
 
   static int idCounter = 1;
 
+  ///Constructor for creating a shopping item
+  ///Updates idCounter so it stays ahead of existing IDs
   ShoppingItem(this.id, this.name, this.qty) {
     if (id >= idCounter) {
       idCounter = id + 1;
@@ -21,6 +23,7 @@ class ShoppingItem {
   }
 }
 
+  ///Main page of my shopping list application
   class ShoppingListPage extends StatefulWidget {
     const ShoppingListPage({super.key});
 
@@ -29,21 +32,28 @@ class ShoppingItem {
 }
 
 class _ShoppingListPageState extends State<ShoppingListPage> {
+  ///Controller for item name and quantity text field
   final TextEditingController itemController = TextEditingController();
   final TextEditingController qtyController = TextEditingController();
 
+  ///List used to store shoppin items currently displayed on screen
   final List<ShoppingItem> items = [];
 
+  ///Database instance
   late AppDatabase database;
+
+  ///DAO object used to access database methods
   late ShoppingDao dao;
-  bool isDatabaseReady = false;
 
   @override
   void initState() {
     super.initState();
+
+    ///Load the database and any saved items when page starts
     loadDatabase();
   }
 
+    ///Opens the Floor database and loads all saved shopping items
     Future<void> loadDatabase() async {
       database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
       dao = database.shoppingDao;
@@ -53,38 +63,35 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
       setState(() {
         items.clear();
         items.addAll(list);
-        isDatabaseReady = true;
       });
     }
 
 
   @override
   void dispose() {
+    ///Dispose controllers to free memory when page is closed
     itemController.dispose();
     qtyController.dispose();
     super.dispose();
   }
 
+  ///Adds a new shopping item to database and list on screen
   Future<void> addItem() async {
-    if (!isDatabaseReady) return;
-
-    final name = itemController.text.trim();
-    final qtyText = qtyController.text.trim();
-
-    if (name.isEmpty || qtyText.isEmpty) return;
-
-    final qty = int.tryParse(qtyText);
-    if (qty == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter a valid quantity")),
-      );
+    ///Do nothing if either field is empty
+    if (itemController.text.isEmpty || qtyController.text.isEmpty) {
       return;
     }
 
-    final item = ShoppingItem(ShoppingItem.idCounter++, name, qty);
+    final item = ShoppingItem(
+      ShoppingItem.idCounter++,
+      itemController.text,
+      int.parse(qtyController.text),
+    );
 
+    ///Insert item into the database
     await dao.insertItem(item);
 
+    ///Updates the screen and clear text fields
     setState(() {
       items.add(item);
       itemController.clear();
@@ -92,7 +99,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     });
   }
 
-
+    ///Shows a dialog before deleting an item
     void confirmDelete(int index) {
       showDialog(
         context: context,
@@ -112,10 +119,10 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                   final item = items[index];
                   Navigator.pop(context);
 
+                  ///Delete the item from the database
                   await dao.deleteItem(item);
 
-                  if (!mounted) return;
-
+                  ///Remove the item from the screen
                   setState(() {
                     items.remove(item);
                   });
@@ -127,7 +134,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
         },
       );
     }
-
+    ///Builds main page layout
     Widget listPage() {
       return Column(
         children: [
@@ -191,8 +198,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Text(
                           "${index + 1}: ${item.name}   quantity: ${item.qty}",
-                          textAlign: TextAlign
-                              .center,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     );
@@ -211,16 +217,11 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("Shopping List"),
-          backgroundColor: Theme
-              .of(context)
-              .colorScheme
-              .inversePrimary,
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: isDatabaseReady
-            ? listPage()
-            : const Center(child: CircularProgressIndicator()),
+          child: listPage(),
         ),
       );
     }
