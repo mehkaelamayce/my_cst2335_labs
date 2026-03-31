@@ -66,15 +66,6 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
       });
     }
 
-
-  @override
-  void dispose() {
-    ///Dispose controllers to free memory when page is closed
-    itemController.dispose();
-    qtyController.dispose();
-    super.dispose();
-  }
-
   ///Adds a new shopping item to database and list on screen
   Future<void> addItem() async {
     ///Do nothing if either field is empty
