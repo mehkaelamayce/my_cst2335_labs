@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'list_page.dart';
+import 'shopping_item.dart';
 
 @dao
 abstract class ShoppingDao {
