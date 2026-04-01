@@ -16,6 +16,6 @@ class ShoppingItem {
   ShoppingItem(this.id, this.name, this.qty) {
     if (id >= idCounter) {
       idCounter = id + 1;
+      }
     }
   }
-}
