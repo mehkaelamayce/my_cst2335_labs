@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
 import 'database.dart';
-import 'shopping_dao.dart';
 import 'shopping_item.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final database =
-    await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-
-  final dao = database.shoppingDao;
-
-  runApp(MyApp(dao));
+void main() async {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final ShoppingDao dao;
-
-  const MyApp(this.dao, {super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,29 +17,32 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
       ),
-      home: ShoppingListPage(dao),
+      home: const ShoppingListPage(title: 'Shopping List'),
     );
   }
 }
 
 ///Main page of my shopping list application
 class ShoppingListPage extends StatefulWidget {
-  final ShoppingDao dao;
+  const ShoppingListPage({super.key, required this.title});
 
-  const ShoppingListPage(this.dao, {super.key});
+  final String title;
 
   @override
   State<ShoppingListPage> createState() => _ShoppingListPageState();
 }
 
 class _ShoppingListPageState extends State<ShoppingListPage> {
+  List<ShoppingItem> items = [];
+  ShoppingItem? selectedItem;
+
   ///Controller for item name and quantity text field
   final TextEditingController itemController = TextEditingController();
   final TextEditingController qtyController = TextEditingController();
 
+  late var dao;
+
   ///List used to store shoppin items currently displayed on screen
-  final List<ShoppingItem> items = [];
-  ShoppingItem? selectedItem;
 
   @override
   void initState() {
@@ -60,148 +53,178 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
   }
 
   ///Opens the Floor database and loads all saved shopping items
-  Future<void> loadDatabase() async {
-    final list = await widget.dao.findAllItems();
+  void loadDatabase() async {
+    AppDatabase database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    dao = database.shoppingDao;
+
+    final list = await dao.findAllItems();
 
     setState(() {
-      items.clear();
-      items.addAll(list);
+      items = list;
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    itemController.dispose();
+    qtyController.dispose();
+  }
+
   ///Adds a new shopping item to database and list on screen
-  Future<void> addItem() async {
+  void addItem() async {
     ///Do nothing if either field is empty
     if (itemController.text.isEmpty || qtyController.text.isEmpty) {
       return;
     }
 
-    final item = ShoppingItem(
+    final newItem = ShoppingItem(
       ShoppingItem.idCounter++,
       itemController.text,
       int.parse(qtyController.text),
     );
 
     ///Insert item into the database
-    await widget.dao.insertItem(item);
+    await dao.insertItem(newItem);
 
     ///Updates the screen and clear text fields
     setState(() {
-      items.add(item);
+      items.add(newItem);
     });
 
     itemController.clear();
     qtyController.clear();
   }
 
-  ///Shows a dialog before deleting an item
-  void confirmDelete(int index) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Delete item?"),
-          content: const Text("Do you want to delete this item?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () async {
-                final item = items[index];
-                Navigator.pop(context);
+  Widget reactiveLayout() {
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
+    var width = size.width;
 
-                ///Delete the item from the database
-                await widget.dao.deleteItem(item);
-
-                ///Remove the item from the screen
-                setState(() {
-                  items.remove(item);
-                });
-              },
-              child: const Text("Yes"),
-            ),
-          ],
-        );
-      },
-    );
+    if ((width > height) && (width > 720)) {
+      return Row(children: [
+        Expanded(flex: 2, child: listPage(),),
+        Expanded(flex: 3, child: detailsPage(),),
+        ],
+      );
+    } else {
+      if (selectedItem == null) {
+        return listPage();
+      } else {
+        return detailsPage();
+      }
+    }
   }
+
+  Widget detailsPage() {
+    if (selectedItem != null) {
+      return Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Name: ${selectedItem!.name}",
+          style: const TextStyle(fontSize: 20.0),
+          ),
+          Text("Quantity: ${selectedItem!.qty}",
+          style: const TextStyle(fontSize: 20.0),
+          ),
+          Text("DatabaseID: ${selectedItem!.id}",
+          style: const TextStyle(fontSize: 20.0),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await dao.deleteItem(selectedItem!);
+              setState(() {
+                items.remove(selectedItem);
+                selectedItem = null;
+              });
+            },
+            child: const Text("Delete"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                selectedItem = null;
+              });
+            },
+            child: const Text("Close"),
+          )
+        ],)
+      );
+    } else {
+      return const Center (
+        child: Text(
+          "Please select an item from the list",
+          style: TextStyle(fontSize: 20.0),
+        )
+      );
+    }
+  }
+
   ///Builds main page layout
   Widget listPage() {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 6,
-                child: TextField(
-                  controller: itemController,
-                  decoration: const InputDecoration(
-                    hintText: "Type the item here",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
+        Row(children: [
+          Expanded(flex: 6,
+            child: TextField(
+              controller: itemController,
+              decoration: const InputDecoration(
+                hintText: "Type the item here", border: OutlineInputBorder(),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 6,
-                child: TextField(
-                  controller: qtyController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: "Type the quantity here",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              SizedBox(
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: addItem,
-                  child: const Text("Add"),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-
-        const SizedBox(height: 20),
-        Expanded(
+          const SizedBox(width: 12),
+            Expanded(flex: 6,
+              child: TextField(
+                controller: qtyController, keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  hintText: "Type the quantity here", border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          const SizedBox(width: 12),
+          SizedBox(
+            height: 56,
+            child: ElevatedButton(
+              onPressed: addItem,
+              child: const Text("Add"),
+            ),
+          ),
+        ],
+      ),
+          const SizedBox(height: 20),
+          Expanded(
           child: items.isEmpty
-              ? const Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Center(child: Text("There are no items in the list")),
+              ? const Center(
+                child: Text("There are no items in the list"),
           )
-        : Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              width: 320,
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
+        : ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final currentItem = items[index];
 
-                  return GestureDetector(
-                    onLongPress: () => confirmDelete(index),
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedItem = currentItem;
+                  });
+                },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Text(
-                        "${index + 1}: ${item.name}   quantity: ${item.qty}",
-                        textAlign: TextAlign.center,
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("${index +1}. "),
+                          Text(currentItem.name),
+                          Text(" quantity: ${currentItem.qty}"),
+                        ],
                       ),
                     ),
                   );
                 },
               ),
-            ),
-          ),
-        )
+
+        ),
       ],
     );
   }
@@ -211,12 +234,12 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Shopping List"),
+        title: Text(widget.title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: listPage(),
+        child: reactiveLayout(),
       ),
     );
   }
