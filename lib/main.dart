@@ -49,6 +49,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
 
   ///List used to store shoppin items currently displayed on screen
   final List<ShoppingItem> items = [];
+  ShoppingItem? selectedItem;
 
   @override
   void initState() {
